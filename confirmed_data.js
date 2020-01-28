@@ -1,11 +1,107 @@
-const LAST_UPDATE = "2020.01.28-12:09:33"; 
+const LAST_UPDATE = "2020.01.28-19:13:05"; 
 
 const DATA = {
   "110000": {
-    "confirmedCount": 80,
+    "confirmedCount": 91,
     "cityName": "北京市",
     "deadCount": 1,
     "color": "#E04B49"
+  },
+  "110101": {
+    "confirmedCount": 2,
+    "cityName": "东城区",
+    "deadCount": 0,
+    "color": "#F08E7E"
+  },
+  "110102": {
+    "confirmedCount": 8,
+    "cityName": "西城区",
+    "deadCount": 0,
+    "color": "#F08E7E"
+  },
+  "110105": {
+    "confirmedCount": 17,
+    "cityName": "朝阳区",
+    "deadCount": 0,
+    "color": "#E04B49"
+  },
+  "110106": {
+    "confirmedCount": 7,
+    "cityName": "丰台区",
+    "deadCount": 0,
+    "color": "#F08E7E"
+  },
+  "110107": {
+    "confirmedCount": 2,
+    "cityName": "石景山区",
+    "deadCount": 0,
+    "color": "#F08E7E"
+  },
+  "110108": {
+    "confirmedCount": 21,
+    "cityName": "海淀区",
+    "deadCount": 0,
+    "color": "#E04B49"
+  },
+  "110109": {
+    "confirmedCount": 0,
+    "cityName": "门头沟区",
+    "deadCount": 0,
+    "color": "#FFFFFF"
+  },
+  "110111": {
+    "confirmedCount": 0,
+    "cityName": "房山区",
+    "deadCount": 0,
+    "color": "#FFFFFF"
+  },
+  "110112": {
+    "confirmedCount": 7,
+    "cityName": "通州区",
+    "deadCount": 0,
+    "color": "#F08E7E"
+  },
+  "110113": {
+    "confirmedCount": 2,
+    "cityName": "顺义区",
+    "deadCount": 0,
+    "color": "#F08E7E"
+  },
+  "110114": {
+    "confirmedCount": 7,
+    "cityName": "昌平区",
+    "deadCount": 0,
+    "color": "#F08E7E"
+  },
+  "110115": {
+    "confirmedCount": 7,
+    "cityName": "大兴区",
+    "deadCount": 0,
+    "color": "#F08E7E"
+  },
+  "110116": {
+    "confirmedCount": 0,
+    "cityName": "怀柔区",
+    "deadCount": 0,
+    "color": "#FFFFFF"
+  },
+  "110117": {
+    "confirmedCount": 0,
+    "cityName": "平谷区",
+    "deadCount": 0,
+    "color": "#FFFFFF"
+  },
+  "110118": {
+    "confirmedCount": 0,
+    "cityName": "密云区",
+    "deadCount": 0,
+    "color": "#FFFFFF"
+  },
+  "110119": {
+    "confirmedCount": 0,
+    "cityName": "延庆区",
+    "deadCount": 0,
+    "color": "#FFFFFF"
   },
   "120000": {
     "confirmedCount": 24,
@@ -146,10 +242,10 @@ const DATA = {
     "color": "#F08E7E"
   },
   "150100": {
-    "confirmedCount": 0,
+    "confirmedCount": 2,
     "cityName": "呼和浩特市",
     "deadCount": 0,
-    "color": "#FFFFFF"
+    "color": "#F08E7E"
   },
   "150200": {
     "confirmedCount": 3,
@@ -686,25 +782,25 @@ const DATA = {
     "color": "#E04B49"
   },
   "350200": {
-    "confirmedCount": 4,
+    "confirmedCount": 5,
     "cityName": "厦门市",
     "deadCount": 0,
     "color": "#F08E7E"
   },
   "350300": {
-    "confirmedCount": 10,
+    "confirmedCount": 14,
     "cityName": "莆田市",
     "deadCount": 0,
     "color": "#E04B49"
   },
   "350400": {
-    "confirmedCount": 4,
+    "confirmedCount": 8,
     "cityName": "三明市",
     "deadCount": 0,
     "color": "#F08E7E"
   },
   "350500": {
-    "confirmedCount": 10,
+    "confirmedCount": 13,
     "cityName": "泉州市",
     "deadCount": 0,
     "color": "#E04B49"
@@ -716,16 +812,16 @@ const DATA = {
     "color": "#F08E7E"
   },
   "350700": {
-    "confirmedCount": 2,
+    "confirmedCount": 3,
     "cityName": "南平市",
     "deadCount": 0,
     "color": "#F08E7E"
   },
   "350800": {
-    "confirmedCount": 0,
+    "confirmedCount": 1,
     "cityName": "龙岩市",
     "deadCount": 0,
-    "color": "#FFFFFF"
+    "color": "#F08E7E"
   },
   "350900": {
     "confirmedCount": 6,
@@ -1013,7 +1109,7 @@ const DATA = {
     "confirmedCount": 1590,
     "cityName": "武汉市",
     "deadCount": 85,
-    "color": "#73181B"
+    "color": "#430c0e"
   },
   "420200": {
     "confirmedCount": 53,
@@ -1208,7 +1304,7 @@ const DATA = {
     "color": "#F08E7E"
   },
   "440300": {
-    "confirmedCount": 49,
+    "confirmedCount": 57,
     "cityName": "深圳市",
     "deadCount": 0,
     "color": "#E04B49"
@@ -1238,7 +1334,7 @@ const DATA = {
     "color": "#FFFFFF"
   },
   "440800": {
-    "confirmedCount": 5,
+    "confirmedCount": 7,
     "cityName": "湛江市",
     "deadCount": 0,
     "color": "#F08E7E"
@@ -1262,7 +1358,7 @@ const DATA = {
     "color": "#E04B49"
   },
   "441400": {
-    "confirmedCount": 3,
+    "confirmedCount": 4,
     "cityName": "梅州市",
     "deadCount": 0,
     "color": "#F08E7E"
@@ -1274,25 +1370,25 @@ const DATA = {
     "color": "#F08E7E"
   },
   "441600": {
-    "confirmedCount": 0,
+    "confirmedCount": 1,
     "cityName": "河源市",
     "deadCount": 0,
-    "color": "#FFFFFF"
+    "color": "#F08E7E"
   },
   "441700": {
-    "confirmedCount": 8,
+    "confirmedCount": 9,
     "cityName": "阳江市",
     "deadCount": 0,
     "color": "#F08E7E"
   },
   "441800": {
-    "confirmedCount": 5,
+    "confirmedCount": 6,
     "cityName": "清远市",
     "deadCount": 0,
     "color": "#F08E7E"
   },
   "441900": {
-    "confirmedCount": 2,
+    "confirmedCount": 7,
     "cityName": "东莞市",
     "deadCount": 0,
     "color": "#F08E7E"
@@ -1940,10 +2036,10 @@ const DATA = {
     "color": "#F08E7E"
   },
   "530100": {
-    "confirmedCount": 7,
+    "confirmedCount": 12,
     "cityName": "昆明市",
     "deadCount": 0,
-    "color": "#F08E7E"
+    "color": "#E04B49"
   },
   "530300": {
     "confirmedCount": 2,
@@ -1952,25 +2048,25 @@ const DATA = {
     "color": "#F08E7E"
   },
   "530400": {
-    "confirmedCount": 1,
+    "confirmedCount": 5,
     "cityName": "玉溪市",
     "deadCount": 0,
     "color": "#F08E7E"
   },
   "530500": {
-    "confirmedCount": 3,
+    "confirmedCount": 4,
     "cityName": "保山市",
     "deadCount": 0,
     "color": "#F08E7E"
   },
   "530600": {
-    "confirmedCount": 1,
+    "confirmedCount": 2,
     "cityName": "昭通市",
     "deadCount": 0,
     "color": "#F08E7E"
   },
   "530700": {
-    "confirmedCount": 5,
+    "confirmedCount": 6,
     "cityName": "丽江市",
     "deadCount": 0,
     "color": "#F08E7E"
@@ -2006,13 +2102,13 @@ const DATA = {
     "color": "#FFFFFF"
   },
   "532800": {
-    "confirmedCount": 1,
+    "confirmedCount": 6,
     "cityName": "西双版纳傣族自治州",
     "deadCount": 0,
     "color": "#F08E7E"
   },
   "532900": {
-    "confirmedCount": 2,
+    "confirmedCount": 3,
     "cityName": "大理白族自治州",
     "deadCount": 0,
     "color": "#F08E7E"
@@ -2078,7 +2174,7 @@ const DATA = {
     "color": "#FFFFFF"
   },
   "610100": {
-    "confirmedCount": 12,
+    "confirmedCount": 15,
     "cityName": "西安市",
     "deadCount": 0,
     "color": "#E04B49"
@@ -2090,10 +2186,10 @@ const DATA = {
     "color": "#F08E7E"
   },
   "610300": {
-    "confirmedCount": 0,
+    "confirmedCount": 3,
     "cityName": "宝鸡市",
     "deadCount": 0,
-    "color": "#FFFFFF"
+    "color": "#F08E7E"
   },
   "610400": {
     "confirmedCount": 4,
@@ -2102,7 +2198,7 @@ const DATA = {
     "color": "#F08E7E"
   },
   "610500": {
-    "confirmedCount": 1,
+    "confirmedCount": 3,
     "cityName": "渭南市",
     "deadCount": 0,
     "color": "#F08E7E"
@@ -2114,7 +2210,7 @@ const DATA = {
     "color": "#F08E7E"
   },
   "610700": {
-    "confirmedCount": 3,
+    "confirmedCount": 4,
     "cityName": "汉中市",
     "deadCount": 0,
     "color": "#F08E7E"
@@ -2126,13 +2222,13 @@ const DATA = {
     "color": "#FFFFFF"
   },
   "610900": {
-    "confirmedCount": 7,
+    "confirmedCount": 8,
     "cityName": "安康市",
     "deadCount": 0,
     "color": "#F08E7E"
   },
   "611000": {
-    "confirmedCount": 1,
+    "confirmedCount": 2,
     "cityName": "商洛市",
     "deadCount": 0,
     "color": "#F08E7E"
@@ -2438,7 +2534,7 @@ const DATA = {
     "color": "#FFFFFF"
   },
   "710000": {
-    "confirmedCount": 5,
+    "confirmedCount": 7,
     "cityName": "台湾",
     "deadCount": 0,
     "color": "#F08E7E"
