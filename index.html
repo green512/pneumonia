@@ -5,6 +5,7 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <link rel="stylesheet" href="./loading.css">
      <style>
         html,
         body,
@@ -14,6 +15,9 @@
             width: 100%;
             height: 100%;
         }
+        a{
+            color:#f0f2ff
+        }
     </style>
      <style>
         .legend {
@@ -21,6 +25,7 @@
             bottom: 20px;
             right: 20px;
             background: transparent;
+            background-color: #f5eeee;
             border-radius: 5px;
             /*box-shadow: 0 0 5px rgba(0, 0, 0, 0.9);*/
         }
@@ -42,15 +47,35 @@
             display: inline-block;
             width: 47px;
             text-align: center;
-            margin-left: -4px;
+            margin-left: -1px;
             font-size: 14px;
         }
     </style>
+    <style>
+        .amap-info-content.amap-info-outer {
+            background-color: #27272b;
+            color: #f0f2ff;
+            width: 100px;
+        }
+        .bottom-center .amap-info-sharp {
+            border-top: 8px solid #27272b;
+        }
+        .bottom-center button {
+          border: none;
+          color: #2181ff;
+          float: right;
+          background: transparent;
+        }
+        .amap-info-close {
+          color: #606166;
+        }
+      </style>
     <title>新冠肺炎地级市疫情图</title>
     <script type="text/javascript" src="./confirmed_data.js"></script>
 </head>
 <body>
 <p style="text-align:center; width: 100%"><h1 id='title' style="text-align:center; width: 100%">新冠肺炎地级市疫情图</h1>
+    <h3 id='title1' style="text-align:center; width: 100%"><a style="color:#2538b4" href='dataset-link.html'>疫情趋势图</a>点击查看数据</h3>
     <h3 id='title1' style="text-align:center; width: 100%"></h3></p>
 
  <div id="container" class="container"></div>
@@ -61,24 +86,28 @@
         <li class="color-item" style="background-color: #ffffff"></li>
         <li class="color-item" style="background-color: #F08E7E"></li>
         <li class="color-item" style="background-color: #E04B49"></li>
-        <li class="color-item" style="background-color: #73181B"></li></ul>
+        <li class="color-item" style="background-color: #73181B"></li>
+        <li class="color-item" style="background-color: #430c0e"></li></ul>
     <ul class="labels" id="legend-label" style="padding: 0">
         <li class="label-item">0</li>
         <li class="label-item">1</li>
         <li class="label-item">10</li>
         <li class="label-item">100</li>
+        <li class="label-item">1000</li>
     </ul>
 </div>
 
-<script src="https://webapi.amap.com/maps?v=1.4.15&key=cddc8264cfa8793b396c890db09d96a0&plugin=AMap.Geocoder,Map3D,AMap.DistrictLayer,AMap.Scale,AMap.ToolBar"></script>
+<script src="https://webapi.amap.com/maps?v=1.4.15&key=f9686a37f49c66279a2f7ac724cadda7&plugin=AMap.Geocoder,Map3D,AMap.DistrictLayer,AMap.Scale,AMap.ToolBar"></script>
 <script src="https://a.amap.com/Loca/static/mock/adcodes.js"></script>
+<script src="./jquery-1.11.2.js"></script>
+<script src="./loading.js"></script>
 <script>
 
-    document.getElementById('title1').innerHTML +=  '（最后更新于 ' + LAST_UPDATE + '）';
+    document.getElementById('title1').innerHTML +=  '（更新于 ' + LAST_UPDATE + '）';
 
     var map = new AMap.Map("container", {
         zoom: 4,
-        center: [108, 36],
+        center: [108, 34],
         pitch: 0,
         viewMode: '3D',
         //zoomEnable:false,
@@ -86,26 +115,11 @@
     });
 
     
-    
+    var infoWin;
 
-    // 创建省份图层
-    // 排除重庆(500000)
-    var all_provinces = ['110000', '120000', '130000', '140000', '150000', '210000', '220000', '230000', '310000', '320000', '330000', '340000', '350000', '360000', '370000', '410000', '420000', '430000', '440000', '450000', '460000', '510000', '520000', '530000', '540000', '610000', '620000', '630000', '640000', '650000', '710000', '810000', '820000'];
-    var disProvince = new AMap.DistrictLayer.Province({
-        zIndex: 12,
-        adcode: all_provinces,
-        depth: 1,
-        styles: {
-            'fill': function (properties) {
-                return DATA[properties.adcode]['color']
-            },
-            'province-stroke': 'cornflowerblue',
-            'city-stroke': 'white', // 中国地级市边界
-            'county-stroke': 'rgba(255,255,255,0.5)' // 中国区县边界
-        }
+    infoWin = new AMap.InfoWindow({
+        closeWhenClickMap: true
     });
-
-    disProvince.setMap(map);
 
     var disChongqing = new AMap.DistrictLayer.Province({
         zIndex: 12,
@@ -122,43 +136,70 @@
     });
 
     disChongqing.setMap(map);
-    var layer = new AMap.LabelsLayer({
-        zooms: [3, 20],
-        zIndex: 1000,
-        // 开启标注避让，默认为开启，v1.4.15 新增属性
-        collision: true,
-        // 开启标注淡入动画，默认为开启，v1.4.15 新增属性
-        animation: true,
+
+    // 创建省份图层
+    // 排除重庆(500000)
+    var all_provinces = ['110000', '120000', '130000', '140000', '150000', '210000', '220000', '230000', '310000', '320000', '330000', '340000', '350000', '360000', '370000', '410000', '420000', '430000', '440000', '450000', '460000', '510000', '520000', '530000', '540000', '610000', '620000', '630000', '640000', '650000', '710000', '810000', '820000'];
+    var disProvince = new AMap.DistrictLayer.Province({
+        zIndex: 12,
+        adcode: all_provinces,
+        depth: 1,
+        eventSupport: true,
+         styles: {
+            'fill': function (properties) {
+                return DATA[properties.adcode]['color']
+            },
+            'province-stroke': 'cornflowerblue',
+            'city-stroke': 'white', // 中国地级市边界
+            'county-stroke': 'rgba(255,255,255,0.5)' // 中国区县边界
+        }
     });
-    map.add(layer);
-    var markers = [];
-    var geocoder = new AMap.Geocoder({
-      
-    });
+
+    disProvince.setMap(map);
+
     
 
-    // var addresses = new Array();
-    // var i=0;
-    // for (x in DATA) {
-    //     var curData = DATA[x];
-    //     //var marker = new AMap.Marker();
-    //     var address  = DATA[x]['cityName'];
-    //     addresses[i] = address;
-    //     i++;             
-        
-    // } 
-    // geocoder.getLocation(addresses, function(status, result) {
-    //         if (status === 'complete'&&result.geocodes.length) {
-    //             for(var i=0;i<result.geocodes.length;i+=1){
-    //                 var  marker = new AMap.Marker({
-    //                     position: result.geocodes[i].location
-    //                 });
-    //                 markers.push(marker);
-    //             }
-    //             map.add(markers);
-    //             //map.setFitView(markers);
-    //         }
-    //     });
+    var load = new Loading();
+    load.init({
+        target: "#container"
+    });
+    load.start();
+    // setTimeout(function() {
+    //     load.stop();
+    // }, 3000)
+    disProvince.on('complete', function () {
+        load.stop();
+    });
+    map.on('click', function (ev) {
+        var px = ev.pixel;
+        var lnglat = ev.lnglat;
+        // 拾取所在位置的行政区
+        var props = disProvince.getDistrictByContainerPos(px);
+
+        if (props) {
+            var SOC = props.SOC;
+            if(SOC){
+                
+                updateInfo(props,lnglat);
+            }          
+            
+        }
+    });
+    function updateInfo(props,lnglat) {
+        infoWin.open(map, lnglat);
+        console.log(props);
+
+        var content = [
+            '<a href="'+props.adcode+'.html">' + DATA[props.adcode]['cityName']+'</a>',
+            '<br>',
+            '确诊数：' + DATA[props.adcode]['confirmedCount'],
+            '<br>',
+            '死亡数：' + DATA[props.adcode]['deadCount']
+        ];
+        infoWin.setContent(content.join(''));
+    }
+    
+
     
 </script>
 </body>
