@@ -4,13 +4,16 @@ from collections import defaultdict
 import json
 import requests
 import datetime
+import schedule
+import time
 
 
 def load_amap_cities():
-    return dict([line.strip().split() for line in open('adcodes').readlines()])
+    return dict([line.strip().split() for line in open('adcodes', encoding='utf8').readlines()])
 
 
 amap_code_to_city = load_amap_cities()
+#print(amap_code_to_city)
 amap_city_to_code = {v: k for k, v in amap_code_to_city.items()}
 amap_short_city_to_full_city = {k[0:2]: k for k in amap_city_to_code}
 
@@ -47,7 +50,7 @@ def normalize_city_name(dxy_province_name, dxy_city_name):
     # 例如 临高县 其实是市级
     if dxy_city_name[-1] in ['市', '县', '盟']:
         normalized_name = dxy_city_name
-    elif dxy_province_name == '重庆' and dxy_city_name[-1] == '区':
+    elif dxy_province_name == '重庆市' and dxy_city_name[-1] == '区':
         normalized_name = dxy_city_name
     else:
         normalized_name = dxy_city_name + '市'
@@ -59,7 +62,8 @@ def normalize_city_name(dxy_province_name, dxy_city_name):
     # cat adcodes|cut -d' ' -f2|cut -c1-2|sort|uniq -c |sort -k2n
     # 所以可以用前两个字
     normalized_name = amap_short_city_to_full_city.get(dxy_city_name[0:2], '')
-    print('fuzz map', dxy_province_name, dxy_city_name, 'to', normalized_name)
+    if normalized_name != dxy_city_name:
+      print('fuzz map', dxy_province_name, dxy_city_name, 'to', normalized_name)
     return normalized_name
 
 
@@ -68,8 +72,8 @@ def get_confirmed_count_dxy():
     suspected_count = defaultdict(int)
     for p in load_dxy_data():
         dxy_province_name = p['provinceName']
-        if dxy_province_name in ['香港', '澳门', '台湾']:
-            continue
+        # if dxy_province_name in ['香港', '澳门', '台湾']:
+        #     continue
         if dxy_province_name in ['北京市', '上海市', '天津市']:
             code = amap_city_to_code[dxy_province_name]
             confirmed_count[code] = p['confirmedCount']
@@ -87,27 +91,32 @@ def get_confirmed_count_dxy():
 
 def get_confirmed_count_tx():
     confirmed_count = defaultdict(int)
-    suspected_count = defaultdict(int)
+    dead_count = defaultdict(int)
     for item in load_tx_data():
         if item['country'] != '中国':
             continue
         if item['area'] in ['香港', '澳门', '台湾']:
+            province_name = item['area']
+            code = amap_city_to_code[province_name]
+            province_name = item['area'] + '省'
+            confirmed_count[code] += item['confirm']
+            dead_count[code] += item['dead']
             continue
         if item['area'] in ['北京', '上海', '天津']:
             province_name = item['area'] + '市'
             code = amap_city_to_code[province_name]
             confirmed_count[code] += item['confirm']
-            suspected_count[code] += item['suspect']
+            dead_count[code] += item['dead']
             continue
         normalized_name = normalize_city_name(item['area'], item['city'])
         if normalized_name != '':
             code = amap_city_to_code[normalized_name]
             confirmed_count[code] += item["confirm"]
-            suspected_count[code] += item["suspect"]
-    return confirmed_count, suspected_count
+            dead_count[code] += item["dead"]
+    return confirmed_count, dead_count
 
 
-def count_to_color(confirm, suspect):
+def count_to_color(confirm, dead):
     # 颜色含义同丁香园
     if confirm > 100:
         return '#73181B'
@@ -115,32 +124,44 @@ def count_to_color(confirm, suspect):
         return '#E04B49'
     if confirm > 0:
         return '#F08E7E'
-    if suspect > 0:
+    if dead > 0:
         return '#F2D7A2'
     return '#FFFFFF'
 
 
 def write_result(result):
-    writer = open('confirmed_data.js', 'w')
+    writer = open('confirmed_data.js', 'w', encoding='utf8')
     writer.write('const LAST_UPDATE = "')
     writer.write(datetime.datetime.now(datetime.timezone(
         datetime.timedelta(hours=8))).strftime('%Y.%m.%d-%H:%M:%S'))
-    writer.write('";\n')
+    writer.write('"; \r\n')
     writer.write("const DATA = ")
     json.dump(result, writer, indent='  ', ensure_ascii=False)
     writer.close()
 
 
 def main():
-    confirmed_count, suspected_count = get_confirmed_count_tx()
+    now = datetime.datetime.now()
+    ts = now.strftime('%Y-%m-%d %H:%M:%S')
+    
+    confirmed_count, dead_count = get_confirmed_count_tx()
     result = {}
     for code in amap_code_to_city:
         # 现在数据源的疑似都是 0 了
         result[code] = {'confirmedCount': confirmed_count[code],
                         'cityName': amap_code_to_city[code],
-                        'color': count_to_color(confirmed_count[code], suspected_count[code])}
+                        'deadCount': dead_count[code],
+                        'color': count_to_color(confirmed_count[code], dead_count[code])}
     write_result(result)
+    print('do func time :',ts)
 
 
 if __name__ == '__main__':
+    # #清空任务
+    # schedule.clear()
+    # #创建一个按秒间隔执行任务
+    # schedule.every(15).minutes.do(main)
+    # while True:
+    #     schedule.run_pending()
     main()
+
